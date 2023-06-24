@@ -19,6 +19,7 @@ services:
     build:
       dockerfile: dockerfiles/backend-dockerfile
     environment:
+      MYSQL_HOST: 'db'
       MYSQL_USER: 'authoring'
       MYSQL_PASSWORD: 'authoring_interface@123'
     ports:
