@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/lc4eu/AuthoringInterface-Backend.git
+[submodule "client"]
+	path = client
+	url = https://github.com/lc4eu/AuthoringInterface-Client.git

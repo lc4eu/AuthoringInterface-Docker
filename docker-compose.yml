@@ -1,0 +1,30 @@
+version: '3.3'
+services:
+  db:
+    platform: linux/x86_64
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db2'
+      MYSQL_USER: 'authoring'
+      MYSQL_PASSWORD: 'authoring_interface@123'
+      MYSQL_ROOT_PASSWORD: 'authoring_interface@123456'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+  backend:
+    build:
+      dockerfile: dockerfiles/backend-dockerfile
+    environment:
+      MYSQL_USER: 'authoring'
+      MYSQL_PASSWORD: 'authoring_interface@123'
+    ports:
+      - '9999:9999'
+  client:
+    build:
+      dockerfile: dockerfiles/client-dockerfile
+    ports:
+      - '3000:3000'
