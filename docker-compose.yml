@@ -28,5 +28,7 @@ services:
   client:
     build:
       dockerfile: dockerfiles/client-dockerfile
+    environment:
+      REACT_APP_API_BASE_URL: 'http://13.126.213.48:9999'
     ports:
       - '80:3000'
