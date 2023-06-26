@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM --platform=linux/amd64 python:3.8-slim-buster
 
 WORKDIR /app
 
@@ -7,31 +7,42 @@ RUN apt-get update
 RUN apt-get install -y libmariadb-dev
 RUN apt-get install -y gcc
 
-
 RUN pip3 install -r requirements.txt
 RUN apt-get install -y python2
 RUN apt-get install -y python-requests
 
-
-
 COPY ../backend/ .
 
+RUN apt-get install -y curl
+RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+RUN python2 get-pip.py
+
 #install tokenizer
-RUN cd ./USRGenerator/tokenizer
-RUN pip install -r ./USRGenerator/tokenizer/requirements.txt
-RUN python ./USRGenerator/tokenizer/setup.py install
+WORKDIR /app/USRGenerator/tokenizer
+RUN python2 -m pip install -r requirements.txt
+RUN python2 setup.py install
 
 #install pos-tagger
-RUN pip install -r ./USRGenerator/tokenizer/requirements.txt
-RUN python ./USRGenerator/pos-tagger/setup.py install
+WORKDIR /app/USRGenerator/pos-tagger
+RUN python2 -m pip install -r requirements.txt
+RUN python2 setup.py install
 
 # install parser
-RUN ./USRGenerator/parser/install-project.sh
+WORKDIR /app/USRGenerator/parser
+RUN python2 -m pip install -r requirements.txt
+RUN python2 setup.py install
 
-#install tokenizer
-RUN python ./USRGenerator/tokenizer/setup.py install
+RUN cp wx_utf8 /usr/bin/
+RUN cp utf8_wx /usr/bin/
+RUN cp ir_no@ /usr/bin/
+RUN chmod +x /usr/bin/wx_utf8
+RUN chmod +x /usr/bin/utf8_wx
+RUN chmod +x /usr/bin/ir_no@
 
+RUN apt-get install -y icu-devtools
+RUN apt-get install -y libfl-dev
 
 EXPOSE 9999
 
+WORKDIR /app
 CMD ["python3", "main.py", "--host=0.0.0.0"]
