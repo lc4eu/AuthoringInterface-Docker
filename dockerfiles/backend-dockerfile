@@ -6,9 +6,31 @@ COPY ../backend/requirements.txt requirements.txt
 RUN apt-get update
 RUN apt-get install -y libmariadb-dev
 RUN apt-get install -y gcc
+
+
 RUN pip3 install -r requirements.txt
+RUN apt-get install -y python2
+RUN apt-get install -y python-requests
+
+
 
 COPY ../backend/ .
+
+#install tokenizer
+RUN cd ./USRGenerator/tokenizer
+RUN pip install -r ./USRGenerator/tokenizer/requirements.txt
+RUN python ./USRGenerator/tokenizer/setup.py install
+
+#install pos-tagger
+RUN pip install -r ./USRGenerator/tokenizer/requirements.txt
+RUN python ./USRGenerator/pos-tagger/setup.py install
+
+# install parser
+RUN ./USRGenerator/parser/install-project.sh
+
+#install tokenizer
+RUN python ./USRGenerator/tokenizer/setup.py install
+
 
 EXPOSE 9999
 
